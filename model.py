@@ -26,8 +26,11 @@ import numpy as np
 import pandas as pd
 import pickle
 import json
-import xgboost
-from xgboost import XGBRegressor
+
+from sklearn.preprocessing import StandardScaler
+# import xgboost
+# from xgboost import XGBRegressor
+
 
 def _preprocess_data(data):
     """Private helper function to preprocess data for model prediction.
@@ -61,12 +64,15 @@ def _preprocess_data(data):
 
     # ----------- Replace this code with your own preprocessing steps --------
     # Handling outliers
-    feature_vector_df.loc[feature_vector_df['Barcelona_pressure']>1084,'Barcelona_pressure'] = feature_vector_df['Barcelona_pressure'].mean()
-    feature_vector_df.loc[feature_vector_df['Valencia_wind_speed']>20,'Valencia_wind_speed'] = feature_vector_df['Valencia_wind_speed'].median()
+    feature_vector_df.loc[feature_vector_df['Barcelona_pressure'] > 1084,
+                          'Barcelona_pressure'] = feature_vector_df['Barcelona_pressure'].mean()
+    feature_vector_df.loc[feature_vector_df['Valencia_wind_speed'] > 20,
+                          'Valencia_wind_speed'] = feature_vector_df['Valencia_wind_speed'].median()
 
     # Breaking down Time feature
-    feature_vector_df['time']=feature_vector_df['time'].astype('datetime64[ns]')
-    #Day
+    feature_vector_df['time'] = feature_vector_df['time'].astype(
+        'datetime64[ns]')
+    # Day
     feature_vector_df['day'] = feature_vector_df['time'].dt.day
     # month
     feature_vector_df['month'] = feature_vector_df['time'].dt.month
@@ -75,23 +81,25 @@ def _preprocess_data(data):
     # hour
     feature_vector_df['hour'] = feature_vector_df['time'].dt.hour
 
-    #Dropping some columns
-    feature_vector_df =feature_vector_df.drop(['time'], axis =1, inplace=True)
+    # Dropping some columns
+    feature_vector_df = feature_vector_df.drop(['time'], axis=1, inplace=True)
 
     # Dummy Variables
     feature_vector_df = pd.get_dummies(feature_vector_df, drop_first=True)
 
     # Again we make sure that all the column names have underscores instead of whitespaces
 
-    feature_vector_df.columns = [col.replace(" ","_") for col in feature_vector_df.columns]
+    feature_vector_df.columns = [col.replace(
+        " ", "_") for col in feature_vector_df.columns]
 
-    predict_vector = feature_vector_df.copy()
+    predict_vector = StandardScaler().fit_transform(feature_vector_df)
     #predict_vector = feature_vector_df[['Madrid_wind_speed','Bilbao_rain_1h','Valencia_wind_speed']]
     # ------------------------------------------------------------------------
 
     return predict_vector
 
-def load_model(path_to_model:str):
+
+def load_model(path_to_model: str):
     """Adapter function to load our pretrained model into memory.
 
     Parameters
@@ -113,6 +121,7 @@ def load_model(path_to_model:str):
 """ You may use this section (above the make_prediction function) of the python script to implement 
     any auxiliary functions required to process your model's artifacts.
 """
+
 
 def make_prediction(data, model):
     """Prepare request data for model prediction.
