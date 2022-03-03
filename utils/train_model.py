@@ -13,6 +13,7 @@
 import pandas as pd
 import pickle
 from sklearn.linear_model import LinearRegression
+from sklearn.ensemble import GradientBoostingRegressor
 
 # Fetch training data and preprocess for modeling
 train = pd.read_csv('./data/df_train.csv')
