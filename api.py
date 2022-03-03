@@ -27,10 +27,16 @@ from flask import Flask, request, jsonify
 # Application definition
 app = Flask(__name__)
 
+
+@app.route('/home')
+def home():
+    return "Hello, Welcome to our Prediction API"
+
+
 # Load our model into memory.
 # Please update this path to reflect your own trained model.
 static_model = load_model(
-    path_to_model='/assets/trained-models/Spain_loadshortfall_GBR.pkl')
+    path_to_model='assets/trained-models/Spain_loadshortfall_GBR.pkl')
 
 print('-'*40)
 print('Model successfully loaded')

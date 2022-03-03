@@ -28,8 +28,6 @@ import pickle
 import json
 
 from sklearn.preprocessing import StandardScaler
-# import xgboost
-# from xgboost import XGBRegressor
 
 
 def _preprocess_data(data):
@@ -88,9 +86,6 @@ def _preprocess_data(data):
     feature_vector_df = pd.get_dummies(feature_vector_df, drop_first=True)
 
     # Again we make sure that all the column names have underscores instead of whitespaces
-
-    feature_vector_df.columns = [col.replace(
-        " ", "_") for col in feature_vector_df.columns]
 
     predict_vector = StandardScaler().fit_transform(feature_vector_df)
     #predict_vector = feature_vector_df[['Madrid_wind_speed','Bilbao_rain_1h','Valencia_wind_speed']]
